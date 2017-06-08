@@ -9,6 +9,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QDebug>
 #include <QtCore/QTextStream>
+#include <qfontdatabase.h>
+
 
 #define DELAY_MICROSEC 120
 #define DELAY_BETWEEN_PLAYBACK_COMMANDS_MSEC 1000
@@ -37,6 +39,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+    //QFontDatabase::addApplicationFont(":/fonts/FUTRFW.TFF");
+    //QFont font = QFont("Futurist Fixed-width",10,1);
+
+    int id = QFontDatabase::addApplicationFont(":/fonts/arial.ttf");
+    if(id == -1 ){
+           qDebug("FONT NOT LOADED!!!!!!!!!!!");
+    }
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont font(family);
+
     int p = 0;
     //Find out which USB Port the send arduino is connected to
     bool b = false;
@@ -85,6 +98,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //Set default GUI values
     ui->spinBox_4->setValue(DELAY_MICROSEC);
     ui->PlayBackDelaySpinBox->setValue(playBackDelayMS);
+
+    ui->pushButton->setFont(font);
+    ui->spinBox_4->setFont(font);
 
     setFixedSize(this->width(),this->height());
 
@@ -144,6 +160,11 @@ void MainWindow::on_spinBox_3_valueChanged(int arg1)
 {
     PortNumber = (char)(arg1 + 48);
     port->close();
+
+
+    QFontDatabase::addApplicationFont(":/fonts/fonts/FUTRFW.TFF");
+    QFont font = QFont("FUTRFW",10,1);
+    this->setFont(font);
 
     std::string str = "";
     QString qstr = QString::fromStdString(str);
